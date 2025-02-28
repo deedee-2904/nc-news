@@ -1,5 +1,5 @@
 const format = require("pg-format");
-const { convertTimestampToDate, createRef } = require("./utils");
+const { convertTimestampToDate} = require("./utils");
 
 function createTopics() {
   return `CREATE TABLE topics(
