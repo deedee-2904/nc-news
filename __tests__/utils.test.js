@@ -1,6 +1,4 @@
-const {
-  convertTimestampToDate
-} = require("../db/seeds/utils");
+const { convertTimestampToDate, createRef } = require("../db/seeds/utils");
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -38,3 +36,65 @@ describe("convertTimestampToDate", () => {
   });
 });
 
+describe("createRef", () => {
+  test("function returns an object", () => {
+    //arrange
+    const testArray = [];
+    const testKey1 = "";
+    const testKey2 = "";
+    //act
+    const testResult = createRef(testArray, testKey1, testKey2);
+    //assert
+    expect(typeof testResult).toEqual("object");
+    expect(Array.isArray(testResult)).toBe(false);
+  });
+
+  test("function returns an empty object when an empty array is passed", () => {
+    //arrange
+    const testArray = [];
+    const testKey1 = "";
+    const testKey2 = "";
+    //act
+    const testResult = createRef(testArray, testKey1, testKey2);
+    //assert
+    expect(testResult).toEqual({});
+  });
+
+  test("function converts input keys to a key-value pair when an array containing one object", () => {
+    //arrange
+    const testArray = [{ number: 1, colour: "green" }];
+    const testKey1 = "number";
+    const testKey2 = "colour";
+    //act
+    const testResult = createRef(testArray, testKey1, testKey2);
+    //assert
+    expect(testResult).toEqual({ 1: "green" });
+  });
+
+  test("function converts input keys to multiple key-value pair when an array contains multiple objects", () => {
+    //arrange
+    const testArray = [
+      { number: 1, colour: "green" },
+      { number: 2, colour: "blue" },
+      { number: 3, colour: "black" },
+    ];
+    const testKey1 = "number";
+    const testKey2 = "colour";
+    //act
+    const testResult = createRef(testArray, testKey1, testKey2);
+    //assert
+    expect(testResult).toEqual({ 1: "green", 2: "blue", 3: "black" });
+  });
+
+  test("function does not mutate input", () => {
+    //arrange
+    const testArray = [];
+    const testKey1 = "";
+    const testKey2 = "";
+    const control = []
+    //act
+    createRef(testArray, testKey1, testKey2);
+    //assert
+    expect(testArray).toEqual(control);
+  });
+});
