@@ -3,7 +3,7 @@ const db = require("./db/connection");
 const query1 = db;
 
 query1
-  .query("SELECT * FROM users")
+  .query(`SELECT * FROM users`)
   .then((res) => {
     console.log(res.rows);
   })

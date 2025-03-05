@@ -1,5 +1,5 @@
 const format = require("pg-format");
-const { convertTimestampToDate} = require("./utils");
+const { convertTimestampToDate } = require("./utils");
 
 function createTopics() {
   return `CREATE TABLE topics(
@@ -43,14 +43,12 @@ function createArticles() {
   return `CREATE TABLE articles(
         article_id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
-        topic VARCHAR NOT NULL,
-        author VARCHAR NOT NULL,
+        topic VARCHAR REFERENCES topics(slug) NOT NULL,
+        author VARCHAR REFERENCES users(username) NOT NULL,
         body TEXT NOT NULL,
         created_at TIMESTAMP,
         votes INT DEFAULT 0 NOT NULL,
-        article_img_url VARCHAR(1000),      
-        FOREIGN KEY(topic) REFERENCES topics(slug),
-        FOREIGN KEY(author) REFERENCES users(username)
+        article_img_url VARCHAR(1000)      
 
     );`;
 }
@@ -64,12 +62,13 @@ function insertArticles(articleData) {
       newArticle.author,
       newArticle.body,
       newArticle.created_at,
+      newArticle.votes,
       newArticle.article_img_url,
     ];
   });
   return format(
     `INSERT INTO articles
-        (title, topic, author, body,created_at, article_img_url)
+        (title, topic, author, body, created_at, votes, article_img_url)
         VALUES
         %L
         RETURNING *;`,

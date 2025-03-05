@@ -47,11 +47,13 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     .then(() => {
       return db.query(insertArticles(articleData));
     })
-    .then((res) => {
-      const insertedArticles = res.rows
+    .then(({rows}) => {
+      const insertedArticles = rows
+      console.log(insertedArticles,"<<<< articles")
       const articleRef = createRef(insertedArticles,"title","article_id")
       return db.query(insertComments(commentData,articleRef));
     })
+
 };
 
 module.exports = seed;
