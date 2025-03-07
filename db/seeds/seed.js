@@ -13,6 +13,7 @@ const {
 } = require("./seed_functions");
 
 //could be refactored to move all the drop tables and functions to their own files?
+//rename functions or resolve query in them, names are a bit decieveing.
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
   return db
@@ -49,7 +50,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
     })
     .then(({rows}) => {
       const insertedArticles = rows
-      console.log(insertedArticles,"<<<< articles")
+      // console.log(insertedArticles,"<<<< articles")
       const articleRef = createRef(insertedArticles,"title","article_id")
       return db.query(insertComments(commentData,articleRef));
     })
