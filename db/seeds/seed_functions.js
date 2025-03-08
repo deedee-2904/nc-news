@@ -1,7 +1,7 @@
 const format = require("pg-format");
 const { convertTimestampToDate } = require("./utils");
 
-function createTopics() {
+function createTopicsQuery() {
   return `CREATE TABLE topics(
     slug VARCHAR PRIMARY KEY,
     description VARCHAR NOT NULL,
@@ -20,7 +20,7 @@ function insertTopics(topicData) {
   );
 }
 
-function createUsers() {
+function createUsersQuery() {
   return `CREATE TABLE users(
         username VARCHAR PRIMARY KEY,
         name VARCHAR NOT NULL,
@@ -39,7 +39,7 @@ function insertUsers(userData) {
   );
 }
 
-function createArticles() {
+function createArticlesQuery() {
   return `CREATE TABLE articles(
         article_id SERIAL PRIMARY KEY,
         title VARCHAR NOT NULL,
@@ -76,7 +76,7 @@ function insertArticles(articleData) {
   );
 }
 
-function createComments() {
+function createCommentsQuery() {
   return `CREATE TABLE comments(
     comment_id SERIAL PRIMARY KEY,
     article_id INT REFERENCES articles(article_id),
@@ -111,10 +111,10 @@ function insertComments(commentData, articleRef) {
 }
 
 module.exports = {
-  createTopics,
-  createUsers,
-  createArticles,
-  createComments,
+  createTopicsQuery,
+  createUsersQuery,
+  createArticlesQuery,
+  createCommentsQuery,
   insertTopics,
   insertUsers,
   insertArticles,

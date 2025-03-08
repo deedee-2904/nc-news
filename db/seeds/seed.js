@@ -2,43 +2,47 @@ const db = require("../connection");
 const {createRef} = require('./utils')
 
 const {
-  createTopics,
-  createUsers,
-  createArticles,
-  createComments,
+  // createTopicsQuery,
+  // createUsersQuery,
+  // createArticlesQuery,
+  // createCommentsQuery,
   insertTopics,
   insertUsers,
   insertArticles,
   insertComments,
 } = require("./seed_functions");
+const manageTables = require("../manageTables");
 
 //could be refactored to move all the drop tables and functions to their own files?
 //rename functions or resolve query in them, names are a bit decieveing.
 
 const seed = ({ topicData, userData, articleData, commentData }) => {
-  return db
-    .query(`DROP TABLE IF EXISTS comments;`)
-    .then(() => {
-      return db.query(`DROP TABLE IF EXISTS articles;`);
-    })
-    .then(() => {
-      return db.query(`DROP TABLE IF EXISTS users;`);
-    })
-    .then(() => {
-      return db.query(`DROP TABLE IF EXISTS topics;`);
-    })
-    .then(() => {
-      return db.query(createTopics());
-    })
-    .then(() => {
-      return db.query(createUsers());
-    })
-    .then(() => {
-      return db.query(createArticles());
-    })
-    .then(() => {
-      return db.query(createComments());
-    })
+  
+  return manageTables()
+
+  // return db
+  //   .query(`DROP TABLE IF EXISTS comments;`)
+  //   .then(() => {
+  //     return db.query(`DROP TABLE IF EXISTS articles;`);
+  //   })
+  //   .then(() => {
+  //     return db.query(`DROP TABLE IF EXISTS users;`);
+  //   })
+  //   .then(() => {
+  //     return db.query(`DROP TABLE IF EXISTS topics;`);
+  //   })
+  //   .then(() => {
+  //     return db.query(createTopicsQuery())
+  //   })
+  //   .then(() => {
+  //     return db.query(createUsersQuery());
+  //   })
+  //   .then(() => {
+  //     return db.query(createArticlesQuery());
+  //   })
+  //   .then(() => {
+  //     return db.query(createCommentsQuery());
+  //   })
     .then(() => {
       return db.query(insertTopics(topicData));
     })
