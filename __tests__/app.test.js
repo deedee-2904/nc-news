@@ -4,9 +4,7 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
-/* Set up your test imports here */
 
-/* Set up your beforeEach & afterAll functions here */
 beforeEach(() => {
   return seed(data);
 });
@@ -54,7 +52,6 @@ describe("GET /api/topics", () => {
 });
 
 describe("GET /api/articles/:article_id", () => {
-
   test("200 : Responds with an article object with requested id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -86,11 +83,33 @@ describe("GET /api/articles/:article_id", () => {
 
   test("404 : Responds with Article Not Found error message if client inputs a valid id that doesn't exist in the database", () => {
     return request(app)
-    .get("/api/articles/99")
-    .expect(404)
-    .then(({ body }) => {
-      const { msg } = body;
-      expect(msg).toBe("No article found for article_id: 99");
-    });
+      .get("/api/articles/99")
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("No article found for article_id: 99");
+      });
   });
+});
+
+describe("GET /api/articles", () => {
+  test.todo("200 : Responds with an array of article objects sorted by date in descending order by default");
+  test('200 : Responds with an array of article objects sorted by date in descending order by default', () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body.articles;
+        expect(articles.length).not.toBe(0);
+        // articles.forEach((article) => {});
+      });
+  });
+  test.todo("200 : Responds with an array of article objects sorted by the input table coloumn if it exists in the database");
+  test.todo("200 : Repsonds with an array of article objects sorted by date in ascending order queried by the client")
+  test.todo("400 : Responds with error message if topic doesn't exist in the database");
+  test.todo(
+    "404 : Responds with not found error if topic exists in the database but has no associated topics"
+  );
+  test.todo("400 : Responds with error message if sort by coloumn doesn't exist in the database");
+  test.todo("400 : Responds with error message if input sort order isn't ASC or DESC");
 });
