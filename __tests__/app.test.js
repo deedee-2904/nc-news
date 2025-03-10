@@ -26,4 +26,30 @@ describe("GET /api", () => {
   });
 });
 
+describe("GET /api/topics", () => {
 
+  test("200 : Responds with an array of topic objects ", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body }) => {
+        const topics = body.topics;
+        expect(topics.length).not.toBe(0);
+        topics.forEach((topic) => {
+          const { slug, description } = topic;
+          expect(typeof slug).toBe("string");
+          expect(typeof description).toBe("string");
+        });
+      });
+  });
+
+  test("404 : Responds with path not found error message if spelt incorrectly by client", () => {
+    return request(app)
+    .get("/api/toopicss")
+    .expect(404)
+    .then(({ body }) => {
+      const msg = body.msg;
+      expect(msg).toBe("Path not found");
+    });
+  });
+});
