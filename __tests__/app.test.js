@@ -101,7 +101,6 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then(({ body }) => {
         const articles = body.articles;
-        console.log(articles)
         expect(articles.length).not.toBe(0);
         articles.forEach((article) => {
           const {
@@ -126,4 +125,80 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+
+  test("200 : Responds with an array containing a single comment if there is only one comment for the given article_id", () => {
+    return request(app)
+      .get("/api/articles/6/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const comments = body.comments;
+        const comment = comments[0];
+        expect(comments).toHaveLength(1);
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: 16,
+            article_id: 6,
+            body: "This is a bad article name",
+            votes: 1,
+            author: "butter_bridge",
+            created_at: "2020-10-11T15:23:00.000Z",
+          })
+        );
+      });
+  });
+
+  test("200 : Responds with an array of comments for the given article_id sorted in descending order by created_at", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const comments = body.comments;
+        expect(comments).toHaveLength(2);
+        comments.forEach((comment) => {
+          expect(comment).toContainAllKeys([
+            "comment_id",
+            "article_id",
+            "body",
+            "votes",
+            "author",
+            "created_at",
+          ]);
+        });
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+
+  test("400 : Responds with a Bad Request error message if the client inputs an invalid article_id", () => {
+    return request(app)
+      .get("/api/articles/pokemon/comments")
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+
+  test("404 : Responds with a No article found error if client inputs a valid article_id that doesn't exist in the database", () => {
+    return request(app)
+      .get("/api/articles/44/comments")
+      .expect(404)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("No article found for article_id: 44");
+      });
+  });
+
+  test("404 : Responds with a No comments found error if there are no comments for the given article_id", () => {
+    return request(app)
+    .get("/api/articles/7/comments")
+    .expect(404)
+    .then(({ body }) => {
+      const msg = body.msg;
+      expect(msg).toBe("No comments found for article_id: 7");
+    });
+  });
+  
 });
