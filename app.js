@@ -8,6 +8,7 @@ const { customErrorHandler } = require("./error_handling_funcs/custom_error_hand
 const { serverErrorHandler } = require("./error_handling_funcs/server_error_handler");
 const { getAllArticles } = require("./controllers/getAllArticles");
 const { getCommentsByArticleId } = require("./controllers/getCommentsByArticleId");
+const { postCommentByArticleId } = require("./controllers/postCommentByArticleId");
 
 app.use(express.json());
 
@@ -20,6 +21,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId)
 
 app.all("*", (req, res, next) => {
   res.status(404).send({ msg: "Path not found" });
