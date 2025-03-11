@@ -4,9 +4,9 @@ const app = require("../app.js");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
-/* Set up your test imports here */
+require("jest-sorted");
+require("jest-extended");
 
-/* Set up your beforeEach & afterAll functions here */
 beforeEach(() => {
   return seed(data);
 });
@@ -54,7 +54,6 @@ describe("GET /api/topics", () => {
 });
 
 describe("GET /api/articles/:article_id", () => {
-
   test("200 : Responds with an article object with requested id", () => {
     return request(app)
       .get("/api/articles/1")
@@ -86,11 +85,45 @@ describe("GET /api/articles/:article_id", () => {
 
   test("404 : Responds with Article Not Found error message if client inputs a valid id that doesn't exist in the database", () => {
     return request(app)
-    .get("/api/articles/99")
-    .expect(404)
-    .then(({ body }) => {
-      const { msg } = body;
-      expect(msg).toBe("No article found for article_id: 99");
-    });
+      .get("/api/articles/99")
+      .expect(404)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("No article found for article_id: 99");
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200 : Responds with an array of article objects sorted by date in descending order by default", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const articles = body.articles;
+        console.log(articles)
+        expect(articles.length).not.toBe(0);
+        articles.forEach((article) => {
+          const {
+            article_id,
+            title,
+            topic,
+            author,
+            created_at,
+            votes,
+            article_img_url,
+            comment_count,
+          } = article;
+          expect(typeof article_id).toBe("number");
+          expect(typeof title).toBe("string");
+          expect(typeof topic).toBe("string");
+          expect(typeof author).toBe("string");
+          expect(typeof created_at).toBe("string");
+          expect(typeof votes).toBe("number");
+          expect(typeof article_img_url).toBe("string");
+          expect(typeof comment_count).toBe("number");
+        });
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+      });
   });
 });
