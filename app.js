@@ -7,6 +7,7 @@ const { psqlErrorHandler } = require("./error_handling_funcs/psql_error_handler"
 const { customErrorHandler } = require("./error_handling_funcs/custom_error_handler");
 const { serverErrorHandler } = require("./error_handling_funcs/server_error_handler");
 const { getAllArticles } = require("./controllers/getAllArticles");
+const { getCommentsByArticleId } = require("./controllers/getCommentsByArticleId");
 
 app.use(express.json());
 
@@ -16,7 +17,9 @@ app.get("/api/topics", getAllTopics);
 
 app.get("/api/articles/:article_id", getArticleById);
 
-app.get("/api/articles", getAllArticles)
+app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.all("*", (req, res, next) => {
   res.status(404).send({ msg: "Path not found" });

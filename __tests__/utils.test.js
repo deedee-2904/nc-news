@@ -1,4 +1,6 @@
-const { convertTimestampToDate, createRef } = require("../db/seeds/utils");
+const { convertTimestampToDate, createRef, checkExists } = require("../db/seeds/utils");
+const db = require("../db/connection")
+
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -91,10 +93,29 @@ describe("createRef", () => {
     const testArray = [];
     const testKey1 = "";
     const testKey2 = "";
-    const control = []
+    const control = [];
     //act
     createRef(testArray, testKey1, testKey2);
     //assert
     expect(testArray).toEqual(control);
+  });
+});
+
+describe("checkExists", () => {
+  afterAll(()=>{
+    return db.end()
+  })
+
+  test("function returns a rejected promise if value doesn't exist in the column", () => {
+    checkExists("articles", "article_id", 44).then((res) => {
+      expect(res.status).toBe(404);
+      expect(res.msg).toBe("article_id Not Found");
+    });
+  });
+
+  test("function returns true if value exists in column", () => {
+    checkExists("articles", "article_id", 1).then((res) => {
+      expect(res).toBe(true);
+    })
   });
 });
