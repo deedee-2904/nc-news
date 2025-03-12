@@ -201,7 +201,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe.only("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
   test("201 : Responds with the newly posted article object", () => {
     return request(app)
       .post("/api/articles/6/comments")
@@ -225,34 +225,33 @@ describe.only("POST /api/articles/:article_id/comments", () => {
       });
   });
 
-
-  test('400 : Responds with a Bad Request error message if the client inputs a body that does not contain valid fields', () => {
+  test("400 : Responds with a Bad Request error message if the client inputs a body that does not contain valid fields", () => {
     return request(app)
-    .post("/api/articles/6/comments")
-    .send({
-      name: "lurker",
-      text: "I like this article title",
-    })
-    .expect(400)
-    .then(({ body }) => {
-      const msg = body.msg;
-      expect(msg).toBe("Bad Request");
-    });
+      .post("/api/articles/6/comments")
+      .send({
+        name: "lurker",
+        text: "I like this article title",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
   });
 
-  xtest('400 : Responds with a Bad Request error message if the client inputs a body that does not contain valid fields', () => {
+  test("400 : Responds with a Bad Request error message if the client inputs a body that does not contain valid values", () => {
     return request(app)
-    .post("/api/articles/6/comments")
-    .send({
-      username: "lurker",
-      body: 777,
-      age:10 // this is an issue here
-    })
-    .expect(400)
-    .then(({ body }) => {
-      const msg = body.msg;
-      expect(msg).toBe("Bad Request");
-    });
+      .post("/api/articles/6/comments")
+      .send({
+        username: "lurker",
+        body: 777,
+        age: 10,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
   });
 
   test("400 : Responds with a Bad Request error message if the client inputs an invalid article_id", () => {
@@ -269,7 +268,17 @@ describe.only("POST /api/articles/:article_id/comments", () => {
       });
   });
 
-  test.todo(
-    "404/400? : Responds with an Article Not Found error message if the client inputs a valid article_id that doesn't exist in the database"
-  );
+  test("404 : Responds with an Article Not Found error message if the client inputs a valid article_id that doesn't exist in the database", () => {
+    return request(app)
+    .post("/api/articles/24/comments")
+    .send({
+      username: "lurker",
+      body: "I'm here!",
+    })
+    .expect(404)
+    .then(({ body }) => {
+      const msg = body.msg;
+      expect(msg).toBe("No article found for article_id: 24");
+    });
+  });
 });
