@@ -219,7 +219,7 @@ describe("POST /api/articles/:article_id/comments", () => {
             body: "I like this article name",
             votes: 0,
             author: "lurker",
-            created_at: "2025-03-11T16:00:41.586Z",
+            created_at: "2020-01-01T00:00:00.000Z",
           })
         );
       });
@@ -270,15 +270,119 @@ describe("POST /api/articles/:article_id/comments", () => {
 
   test("404 : Responds with an Article Not Found error message if the client inputs a valid article_id that doesn't exist in the database", () => {
     return request(app)
-    .post("/api/articles/24/comments")
-    .send({
-      username: "lurker",
-      body: "I'm here!",
-    })
-    .expect(404)
-    .then(({ body }) => {
-      const msg = body.msg;
-      expect(msg).toBe("No article found for article_id: 24");
-    });
+      .post("/api/articles/24/comments")
+      .send({
+        username: "lurker",
+        body: "I'm here!",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("No article found for article_id: 24");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("201 : Responds with the updated article object with increased votes property for the given article_id", () => {
+    return request(app)
+      .patch("/api/articles/9")
+      .send({
+        inc_votes: 10,
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const article = body.article;
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 9,
+            title: "They're not exactly dogs, are they?",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "Well? Think about it.",
+            created_at: "2020-06-06T09:10:00.000Z",
+            votes: 10,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          })
+        );
+      });
+  });
+
+  test("201 : Responds with the updated article object with decreased votes property for the given article_id", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({
+        inc_votes: -77,
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const article = body.article;
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 23,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          })
+        );
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if article_id is invalid", () => {
+    return request(app)
+      .patch("/api/articles/sims4")
+      .send({
+        inc_votes: 10,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toEqual("Bad Request");
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if body has invalid fields", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({
+        comments: 10,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toEqual("Bad Request");
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if body has valid fields but invalid value ", () => {
+    return request(app)
+      .patch("/api/articles/2")
+      .send({
+        inc_votes: "HACKER",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toEqual("Bad Request");
+      });
+  });
+
+  test("404 : Responds with No Article Found if article_id is valid but doesn't exist in database", () => {
+    return request(app)
+      .patch("/api/articles/55")
+      .send({
+        inc_votes: 100,
+      })
+      .expect(404)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toEqual("No article found for article_id: 55");
+      });
   });
 });
