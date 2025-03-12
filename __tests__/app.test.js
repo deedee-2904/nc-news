@@ -128,7 +128,6 @@ describe("GET /api/articles", () => {
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
-
   test("200 : Responds with an array containing a single comment if there is only one comment for the given article_id", () => {
     return request(app)
       .get("/api/articles/6/comments")
@@ -193,12 +192,93 @@ describe("GET /api/articles/:article_id/comments", () => {
 
   test("404 : Responds with a No comments found error if there are no comments for the given article_id", () => {
     return request(app)
-    .get("/api/articles/7/comments")
+      .get("/api/articles/7/comments")
+      .expect(404)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("No comments found for article_id: 7");
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201 : Responds with the newly posted article object", () => {
+    return request(app)
+      .post("/api/articles/6/comments")
+      .send({
+        username: "lurker",
+        body: "I like this article name",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const comment = body.comment;
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: 19,
+            article_id: 6,
+            body: "I like this article name",
+            votes: 0,
+            author: "lurker",
+            created_at: "2025-03-11T16:00:41.586Z",
+          })
+        );
+      });
+  });
+
+  test("400 : Responds with a Bad Request error message if the client inputs a body that does not contain valid fields", () => {
+    return request(app)
+      .post("/api/articles/6/comments")
+      .send({
+        name: "lurker",
+        text: "I like this article title",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+
+  test("400 : Responds with a Bad Request error message if the client inputs a body that does not contain valid values", () => {
+    return request(app)
+      .post("/api/articles/6/comments")
+      .send({
+        username: "lurker",
+        body: 777,
+        age: 10,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+
+  test("400 : Responds with a Bad Request error message if the client inputs an invalid article_id", () => {
+    return request(app)
+      .post("/api/articles/pokemon/comments")
+      .send({
+        username: "lurker",
+        body: "I like pokemon",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+
+  test("404 : Responds with an Article Not Found error message if the client inputs a valid article_id that doesn't exist in the database", () => {
+    return request(app)
+    .post("/api/articles/24/comments")
+    .send({
+      username: "lurker",
+      body: "I'm here!",
+    })
     .expect(404)
     .then(({ body }) => {
       const msg = body.msg;
-      expect(msg).toBe("No comments found for article_id: 7");
+      expect(msg).toBe("No article found for article_id: 24");
     });
   });
-  
 });
