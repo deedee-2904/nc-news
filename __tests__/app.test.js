@@ -128,6 +128,7 @@ describe("GET /api/articles", () => {
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
+
   test("200 : Responds with an array containing a single comment if there is only one comment for the given article_id", () => {
     return request(app)
       .get("/api/articles/6/comments")
@@ -192,13 +193,14 @@ describe("GET /api/articles/:article_id/comments", () => {
 
   test("404 : Responds with a No comments found error if there are no comments for the given article_id", () => {
     return request(app)
-      .get("/api/articles/7/comments")
-      .expect(404)
-      .then(({ body }) => {
-        const msg = body.msg;
-        expect(msg).toBe("No comments found for article_id: 7");
-      });
+    .get("/api/articles/7/comments")
+    .expect(404)
+    .then(({ body }) => {
+      const msg = body.msg;
+      expect(msg).toBe("No comments found for article_id: 7");
+    });
   });
+  
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
