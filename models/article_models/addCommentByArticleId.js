@@ -1,11 +1,10 @@
 const db = require("../../db/connection");
 
 exports.addCommentByArticleId = (article_id, username, body) => {
-  let date = "2025-03-11T16:00:41.586Z";
   return db
     .query(
-      `INSERT INTO comments (article_id, author, body,created_at) VALUES ($1, $2, $3, $4) RETURNING *`,
-      [article_id, username, body, date]
+      `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING *`,
+      [article_id, username, body]
     )
     .then(({ rows }) => {
       return rows[0];

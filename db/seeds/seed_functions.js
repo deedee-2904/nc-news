@@ -46,7 +46,7 @@ function createArticlesQuery() {
         topic VARCHAR REFERENCES topics(slug) NOT NULL,
         author VARCHAR REFERENCES users(username) NOT NULL,
         body TEXT NOT NULL,
-        created_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
         votes INT DEFAULT 0 NOT NULL,
         article_img_url VARCHAR(1000)      
 
@@ -83,12 +83,11 @@ function createCommentsQuery() {
     body TEXT NOT NULL,
     votes INT DEFAULT 0 NOT NULL,
     author VARCHAR REFERENCES users(username) NOT NULL,
-    created_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT '2020-01-01 00:00:00' NOT NULL
     );`;
 }
 
 function insertComments(commentData, articleRef) {
-  //need to use utils function to convert article title to article id
   const commentToFormat = commentData.map((comment) => {
     let newComment = convertTimestampToDate(comment);
 

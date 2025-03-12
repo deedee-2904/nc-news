@@ -71,5 +71,19 @@
       }
     ]
     }
+  },
+  "PATCH /api/articles/:article_id":{
+    "description":"serves the edited article object with the given article_id",
+    "exampleBody": { "inc_votes" : -50 },
+    "exampleResponse": { 
+      "article_id": 9,
+      "title": "They're not exactly dogs, are they?",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "Well? Think about it.",
+      "created_at": "2020-06-06T09:10:00.000Z",
+      "votes": -50,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    }
   }
 }
