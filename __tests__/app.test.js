@@ -225,7 +225,7 @@ describe("GET /api/articles", () => {
       });
   });
 
-  describe("topic query", () => {
+  describe("topic queries", () => {
     test("200: Responds with an array containing one article if only one article has queried topic ", () => {
       return request(app)
         .get("/api/articles?topic=cats")
@@ -250,6 +250,34 @@ describe("GET /api/articles", () => {
             expect(article).toHaveProperty("topic", "mitch");
           });
           expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+
+    test("200: Responds with an array of articles with the queried topic and sort_by", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=article_id")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).not.toHaveLength(0);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("topic", "mitch");
+          });
+          expect(articles).toBeSortedBy("article_id", { descending: true });
+        });
+    });
+
+    test("200: Responds with an array of articles with the queried topic and sort_by", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=author&order=asc")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).not.toHaveLength(0);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("topic", "mitch");
+          });
+          expect(articles).toBeSortedBy("author", { ascending: true });
         });
     });
 
