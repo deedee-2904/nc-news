@@ -224,6 +224,57 @@ describe("GET /api/articles", () => {
         expect(msg).toBe("Invalid Sort Order Input");
       });
   });
+
+  describe("topic query", () => {
+    test("200: Responds with an array containing one article if only one article has queried topic ", () => {
+      return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).not.toHaveLength(0);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("topic", "cats");
+          });
+        });
+    });
+
+    test("200: Responds with an array of articles with the queried topic", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).not.toHaveLength(0);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("topic", "mitch");
+          });
+          expect(articles).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+
+    test("200: Responds with an empty array if topic exists in the database but has no corresponding articles", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).toHaveLength(0)
+          expect(articles).toEqual([]);
+
+        });
+    });
+
+    test("404: Responds with error message if topic doesn't exist in the database", () => {
+      return request(app)
+        .get("/api/articles?topic=pokemon")
+        .expect(404)
+        .then(({ body }) => {
+          const { msg } = body;
+          expect(msg).toBe("slug Not Found");
+        });
+    });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {

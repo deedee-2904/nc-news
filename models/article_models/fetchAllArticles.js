@@ -1,6 +1,7 @@
 const db = require("../../db/connection");
+const { checkExists } = require("../../db/seeds/utils");
 
-exports.fetchAllArticles = (sort_by, order) => {
+exports.fetchAllArticles = (sort_by, order, topic) => {
   const allowedColumnInputs = [
     "article_id",
     "title",
@@ -10,9 +11,9 @@ exports.fetchAllArticles = (sort_by, order) => {
     "votes",
     "comment_count",
   ];
-  
+
   const allowedOrderInputs = ["asc", "desc"];
-  
+
   if (!sort_by) {
     sort_by = "created_at";
   }
@@ -29,16 +30,20 @@ exports.fetchAllArticles = (sort_by, order) => {
     return Promise.reject({ status: 400, msg: "Invalid Sort Order Input" });
   }
 
+  const queryValues = [];
+  let queryStr = `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
+COUNT(articles.article_id)::INT AS comment_count FROM articles 
+LEFT JOIN comments ON comments.article_id = articles.article_id`;
 
-  return db
-    .query(
-      `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
-    COUNT(articles.article_id)::INT AS comment_count FROM articles 
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.${sort_by} ${order}`
-    )
-    .then(({ rows }) => {
-      return rows;
-    });
+  if (topic) {
+    queryValues.push(topic);
+    queryStr += ` WHERE topic = $1`;
+  }
+
+  queryStr += ` GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order}`;
+
+return db.query(`${queryStr}`, queryValues)
+  .then(({ rows }) => {
+    return rows;
+  })
 };
