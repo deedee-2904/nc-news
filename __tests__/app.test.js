@@ -195,9 +195,19 @@ describe("GET /api/articles", () => {
       });
   });
 
-  test("400 : Responds with Bad Request error message if sort by coloumn doesn't exist in the database", () => {
+  test("400 : Responds with Bad Request error message if sort by coloumn doesn't exist in the table", () => {
     return request(app)
       .get("/api/articles?sort_by=comment_id")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid Column Input");
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if sort by coloumn exists in the table but isn't a valid sorting column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_img_url")
       .expect(400)
       .then(({ body }) => {
         const { msg } = body;
