@@ -128,7 +128,6 @@ describe("GET /api/articles", () => {
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
-
   test("200 : Responds with an array containing a single comment if there is only one comment for the given article_id", () => {
     return request(app)
       .get("/api/articles/6/comments")
@@ -193,14 +192,13 @@ describe("GET /api/articles/:article_id/comments", () => {
 
   test("404 : Responds with a No comments found error if there are no comments for the given article_id", () => {
     return request(app)
-    .get("/api/articles/7/comments")
-    .expect(404)
-    .then(({ body }) => {
-      const msg = body.msg;
-      expect(msg).toBe("No comments found for article_id: 7");
-    });
+      .get("/api/articles/7/comments")
+      .expect(404)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("No comments found for article_id: 7");
+      });
   });
-  
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
@@ -385,6 +383,34 @@ describe("PATCH /api/articles/:article_id", () => {
       .then(({ body }) => {
         const msg = body.msg;
         expect(msg).toEqual("No article found for article_id: 55");
+      });
+  });
+});
+
+describe.only("DELETE /api/comments/:comment_id", () => {
+  test("204 : Responds with no content", () => {
+    return request(app)
+    .delete("/api/comments/7")
+    .expect(204);
+  });
+
+  test("400 : Responds with Bad Request if invalid comment_id is input", () => {
+    return request(app)
+      .delete("/api/comments/mycomment")
+      .expect(400)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("Bad Request");
+      });
+  });
+
+  test("404 : Responds with Not Found error if valid comment_id doesn't exist in the database", () => {
+    return request(app)
+      .delete("/api/comments/23")
+      .expect(404)
+      .then(({ body }) => {
+        const msg = body.msg;
+        expect(msg).toBe("No comment found with the comment_id:23");
       });
   });
 });
