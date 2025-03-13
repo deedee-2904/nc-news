@@ -1,16 +1,44 @@
-const db = require("../../db/connection")
+const db = require("../../db/connection");
 
-exports.fetchAllArticles = () => {
+exports.fetchAllArticles = (sort_by, order) => {
+  const allowedColumnInputs = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  
+  const allowedOrderInputs = ["asc", "desc"];
+  
+  if (!sort_by) {
+    sort_by = "created_at";
+  }
+
+  if (!order) {
+    order = "desc";
+  }
+
+  if (!allowedColumnInputs.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Invalid Column Input" });
+  }
+
+  if (!allowedOrderInputs.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Invalid Sort Order Input" });
+  }
+
+
   return db
     .query(
       `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url,
     COUNT(articles.article_id)::INT AS comment_count FROM articles 
     LEFT JOIN comments ON comments.article_id = articles.article_id
     GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC`
+    ORDER BY articles.${sort_by} ${order}`
     )
     .then(({ rows }) => {
-      const articles = rows;
-      return articles;
+      return rows;
     });
 };

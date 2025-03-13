@@ -125,6 +125,105 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+
+  test("200 : Responds with an array of article objects sorted by the input table coloumn by descending by default if it exists in the database ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).not.toHaveLength(0);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+        expect(articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+
+  test("200 : Repsonds with an array of article objects sorted by date in ascending order queried by the client", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).not.toHaveLength(0);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+        expect(articles).toBeSortedBy("created_at", { ascending: true });
+      });
+  });
+
+  test("200 : Repsonds with an array of article objects sorted by author in ascending order queried by the client ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=author&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).not.toHaveLength(0);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+        expect(articles).toBeSortedBy("author", { ascending: true });
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if sort by coloumn doesn't exist in the table", () => {
+    return request(app)
+      .get("/api/articles?sort_by=comment_id")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid Column Input");
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if sort by coloumn exists in the table but isn't a valid sorting column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_img_url")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid Column Input");
+      });
+  });
+
+  test("400 : Responds with Bad Request error message if input sort order isn't ASC or DESC", () => {
+    return request(app)
+      .get("/api/articles?order=alphabetically")
+      .expect(400)
+      .then(({ body }) => {
+        const { msg } = body;
+        expect(msg).toBe("Invalid Sort Order Input");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
