@@ -389,9 +389,7 @@ describe("PATCH /api/articles/:article_id", () => {
 
 describe("DELETE /api/comments/:comment_id", () => {
   test("204 : Responds with no content", () => {
-    return request(app)
-    .delete("/api/comments/7")
-    .expect(204);
+    return request(app).delete("/api/comments/7").expect(204);
   });
 
   test("400 : Responds with Bad Request if invalid comment_id is input", () => {
@@ -411,6 +409,25 @@ describe("DELETE /api/comments/:comment_id", () => {
       .then(({ body }) => {
         const msg = body.msg;
         expect(msg).toBe("No comment found with the comment_id:23");
+      });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200 : Respond with an array of all user objects present in the database", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const users = body.users;
+        expect(users).not.toHaveLength(0);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
