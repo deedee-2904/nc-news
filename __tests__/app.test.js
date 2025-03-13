@@ -387,7 +387,7 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 });
 
-describe.only("DELETE /api/comments/:comment_id", () => {
+describe("DELETE /api/comments/:comment_id", () => {
   test("204 : Responds with no content", () => {
     return request(app)
     .delete("/api/comments/7")
