@@ -14,6 +14,7 @@ const {
   postCommentByArticleId,
 } = require("./controllers/article_controllers/postCommentByArticleId");
 const { patchArticleById } = require("./controllers/article_controllers/patchArticleById");
+const { deleteCommentById } = require("./controllers/comment_controllers/deleteCommentById");
 
 app.use(express.json());
 
@@ -30,6 +31,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.patch("/api/articles/:article_id", patchArticleById);
+
+app.delete("/api/comments/:comment_id",deleteCommentById)
 
 app.all("*", (req, res, next) => {
   res.status(404).send({ msg: "Path not found" });
