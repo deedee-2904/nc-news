@@ -1,5 +1,6 @@
 const db = require("../../db/connection");
 
+
 exports.addCommentByArticleId = (article_id, username, body) => {
   return db
     .query(
@@ -9,7 +10,4 @@ exports.addCommentByArticleId = (article_id, username, body) => {
     .then(({ rows }) => {
       return rows[0];
     })
-    .catch((err) => {
-      return Promise.reject(err);
-    });
 };

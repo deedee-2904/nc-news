@@ -38,7 +38,7 @@ app.delete("/api/comments/:comment_id", deleteCommentById);
 app.get("/api/users", getAllUsers);
 
 app.all("*", (req, res, next) => {
-  res.status(404).send({ msg: "Path not found" });
+  res.status(404).send({ msg: "Path Not Found" });
 });
 
 app.use(customErrorHandler);

@@ -14,7 +14,7 @@ exports.fetchArticleById = (article_id) => {
       if (!article) {
         return Promise.reject({
           status: 404,
-          msg: `No article found for article_id: ${article_id}`,
+          msg: `No article found with the article_id: ${article_id}`,
         });
       }
       return article;
