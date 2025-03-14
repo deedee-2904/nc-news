@@ -331,7 +331,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/7/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments).toHaveLength(0)
+        expect(comments).toHaveLength(0);
         expect(comments).toEqual([]);
       });
   });
@@ -353,8 +353,6 @@ describe("GET /api/articles/:article_id/comments", () => {
         expect(msg).toBe("article_id Not Found");
       });
   });
-
-
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
@@ -428,8 +426,6 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(msg).toBe("Bad Request");
       });
   });
-
-
 
   test("400 : Responds with a Bad Request error message if the client inputs an invalid article_id", () => {
     return request(app)
@@ -595,5 +591,28 @@ describe("GET /api/users", () => {
           });
         });
       });
+  });
+});
+
+describe("GET /api/users/:username", () => {
+  test("200 : Responds with a user object with the requested username", () => {
+    return request(app)
+      .get("/api/users/butter_bridge")
+      .expect(200)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({
+          username: "butter_bridge",
+          name: "jonny",
+          avatar_url: "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+        });
+      });
+  });
+  test("404 : Responds with a user not found if valid username isn't part of the database", () => {
+    return request(app)
+    .get("/api/users/northcoder")
+    .expect(404)
+    .then(({ body: { msg } }) => {
+      expect(msg).toBe("No user found with the username: northcoder");
+    });
   });
 });
