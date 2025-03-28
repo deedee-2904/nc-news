@@ -76,7 +76,7 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description":"serves the edited article object with the given article_id",
+    "description":"serves the edited article object with the given article_id, user can only update the inc_votes property",
     "exampleBody": { "inc_votes" : -50 },
     "exampleResponse": { 
       "article_id": 9,
