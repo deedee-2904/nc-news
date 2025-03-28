@@ -24,7 +24,4 @@ exports.checkExists = (table, column, value) => {
     }
     return true
   })
-  .catch((err)=>{
-    return err
-  });
 };
