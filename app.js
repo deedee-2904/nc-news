@@ -5,6 +5,9 @@ const { pathErrorHandler } = require("./error_handling_funcs/path_error_handler"
 const { customErrorHandler } = require("./error_handling_funcs/custom_error_handler");
 const { psqlErrorHandler } = require("./error_handling_funcs/psql_error_handler");
 const { serverErrorHandler } = require("./error_handling_funcs/server_error_handler");
+const cors = require("cors")
+
+app.use(cors())
 
 app.use(express.json());
 
