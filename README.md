@@ -1,6 +1,6 @@
-# NC News  📰
+# NC News API  📰
 
-Welcome to NC News!   
+Welcome to the NC News API!   
 
 Here is a link to the [hosted version](https://nc-news-0nn8.onrender.com/)!  
 
@@ -8,17 +8,19 @@ This project seeds an SQL database locally and then uses an API to access the ap
 
 ## Getting Started
 
-You will need to clone the [repo](https://github.com/deedee-2904/nc-news.git) to your local device.  
+You will need to clone the [repo](https://github.com/deedee-2904/nc-news-BE.git) to your local device. Run the following commands in the terminal to do so:
+
+```bash
+git clone https://github.com/deedee-2904/nc-news-BE.git
+
+cd nc-news-BE
+```
 
 Then you will need to install a number of dev dependant and non-dev dependant packages.
 
-The database will then need to be seeded.
+### Installating Packages
 
-Once seeding is completed the npm run test-seed command can be used to confirm that the database has been seeded correctly.
-
-## Installation
-
-Run npm install or npm i to install the following packages on your local device:
+Run ***npm install*** or ***npm i*** to install the following packages on your local device:
 
 Dev Dependancies:
 
@@ -36,18 +38,18 @@ Non-Dev Dependancies:
 - pg-format
 
 
-For the best experience please ensure you are running the minimum versions of Node.js(v15.0.0) and Postgres(v17) to ensure all packages can run without issues.
+For the best experience please ensure you are running the minimum versions of ***Node.js(v23.3.0)*** and ***Postgres(v17)*** to ensure all packages can run without issues.
 
-## NC News Seeding
+## NC News Database Seeding
 
 You will need to set up your environment variables by creating two files in the root of the project directory:  
-***.env.test*** and ***.env.development***
+`.env.test` and `.env.development`
 
-### Steps
+### Seeding Steps
 
 1. Make sure dotenv package is installed and up to date
-2. Populate the ***.env.test*** by setting the ***PGDATABASE*** environment variable to the name of the desired test database i.e. ***PGDATABASE = nc_news_test***
-3. Populate the ***.env.development*** by setting the ***PGDATABASE*** environment variable to the name of the desired development database i.e. ***PGDATABASE = nc_news***   
+2. Populate the `.env.test` file by setting the `PGDATABASE` environment variable to the name of the desired test database i.e. `PGDATABASE = nc_news_test`
+3. Populate the `.env.development` file by setting the `PGDATABASE` environment variable to the name of the desired development database i.e. `PGDATABASE = nc_news`   
 
 #### Example
 ```javascript
@@ -58,46 +60,52 @@ PGDATABASE = nc_news_test
 PGDATABASE = nc_news
 ```
 
-
 ### How to Check Your Connection to Either Database?
 
-You should receieve a console log indicating your conncection to the ***nc_news_test*** database when you run the following: 
+You should receieve a console log indicating your conncection to the `nc_news_test` database when you run the following: 
 
-```javascript
+```bash
 npm run test-seed
 ```
-You should receieve a console log indicating your conncection to the ***nc_news*** database when you run the following:
+You should receieve a console log indicating your conncection to the `nc_news` database when you run the following:
 
-```javascript
+```bash
 npm run seed-dev
 ```
 
 ## Testing
 
-There are 3 test suites in this project; seed.test.js, utils.test.js and app.test.js
+There are 3 test suites in this project: `seed.test.js`, `utils.test.js` and `app.test.js`
 
 To run all three test suites run:
-```javascript
+```bash
 npm run test 
 ```  
 
 To check that the database is seeded correctly and with the correct data types run:
 
-```javascript
+```bash
 npm run test-seed 
 ```
-To check that the utils functions have the exepected behaviour
+To check that the utils functions have the exepected behaviour run:
 
-```javascript
+```bash
 npm run test-utils 
 ```
-To check that the app requests are responding with the expected status codes and response objects based on the clients' request.
+To check that the app requests are responding with the expected status codes and response objects based on the clients' request run:
 
-```javascript
+```bash
 npm run test-app 
 ```
+## Future Features to Come
 
+ - Deleting your own comments
+ - View a separate page for each topic
+ - Sort aricles by: date, comment count, votes in ascending or descending order
+ - Error handling for: non-existent path, article, topic
 
 ## FAQs
 
-Please don't hesitate to contact me with any further question via my [email address](mailto:demaradarkwah@mail.com).
+Please don't hesitate to contact me with any further questions via my [email address](mailto:demaradarkwah@mail.com).
+
+This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
