@@ -97,7 +97,7 @@ To check that the app requests are responding with the expected status codes and
 ```bash
 npm run test-app 
 ```
-## Future Features to Come
+## Features to Come
 
  - Update comment
  - Post a new article
