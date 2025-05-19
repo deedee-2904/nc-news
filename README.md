@@ -20,7 +20,7 @@ Then you will need to install a number of dev dependant and non-dev dependant pa
 
 ### Installating Packages
 
-Run ***npm install*** or ***npm i*** to install the following packages on your local device:
+Run `npm install` or `npm i` to install the following packages on your local device:
 
 Dev Dependancies:
 
