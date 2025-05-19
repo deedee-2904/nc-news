@@ -99,10 +99,12 @@ npm run test-app
 ```
 ## Future Features to Come
 
- - Deleting your own comments
- - View a separate page for each topic
- - Sort aricles by: date, comment count, votes in ascending or descending order
- - Error handling for: non-existent path, article, topic
+ - Update comment
+ - Post a new article
+ - Post a new topic
+ - Pagination of articles
+ - Pagination of comments
+ - Delete an article and its associated comments
 
 ## FAQs
 
